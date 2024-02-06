@@ -31,6 +31,18 @@ public class UserService {
         return user;
     }
 
+    public User findUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID is required for loading asshole!");
+        }
+        return em.find(User.class, id);
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void deleteUser(Long id) {
+        em.remove(em.getReference(User.class, id));
+    }
+
     
 
 }
