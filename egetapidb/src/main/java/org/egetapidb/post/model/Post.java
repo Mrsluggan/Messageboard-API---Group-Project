@@ -1,8 +1,6 @@
 package org.egetapidb.post.model;
 
-import jakarta.persistence.Entity;
 
-@Entity
 public class Post {
 
     private String title;
@@ -33,4 +31,4 @@ public class Post {
         this.id = id;
     }
 
-}
+} 
