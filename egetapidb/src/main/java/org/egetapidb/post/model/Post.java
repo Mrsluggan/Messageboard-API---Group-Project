@@ -5,7 +5,15 @@ public class Post {
 
     private String title;
     private String text;
-    private Long id;
+    private Long idPost;
+
+    public Long getIdPost() {
+        return idPost;
+    }
+
+    public void setIdPost(Long idPost) {
+        this.idPost = idPost;
+    }
 
     public String getTitle() {
         return title;
@@ -23,12 +31,6 @@ public class Post {
         this.text = text;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
 } 

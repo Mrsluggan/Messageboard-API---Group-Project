@@ -9,6 +9,7 @@ import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -42,8 +43,9 @@ public class UserResource {
 
     @GET
     @Path("/{id}")
-    public Response getUserById() {
-        return null;
+    public Response getUserById(@PathParam("id") Long id) {
+        User user = userService.findUser(id);
+        return Response.ok(user).build();
     }
  
     @POST
@@ -57,7 +59,9 @@ public class UserResource {
     }
  
     @DELETE
-    public Response deleteUser() {
-        return null;
+    @Path("/{id}")
+    public Response deleteUser(@PathParam("id") Long id) {
+        userService.deleteUser(id);
+        return Response.noContent().build();
     } 
 } 
