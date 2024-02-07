@@ -30,8 +30,10 @@ public class PostService {
     }
 
     // Metod för att hämta posts av user
-    public Post findPostbyUser(Long id) {
-        return em.find(Post.class, id);
+    public List<Post> findPostbyUser(Long userId) {
+        jakarta.persistence.TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.userId = :userId", Post.class);
+        query.setParameter("userId", userId);
+        return query.getResultList();
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
