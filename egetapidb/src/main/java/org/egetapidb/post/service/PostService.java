@@ -34,4 +34,8 @@ public class PostService {
         return post;
     }
 
+    public Long countAllPosts() {
+        return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
+    }
+
 }

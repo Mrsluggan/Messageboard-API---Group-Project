@@ -69,7 +69,7 @@ public class UserResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
     public Response countUsers() {
-        Long count = userService.countAll();
-        return Response.ok(count).build();
+        Long countPosts = userService.countAllUsers();
+        return Response.ok(countPosts).build();
     }
 } 
