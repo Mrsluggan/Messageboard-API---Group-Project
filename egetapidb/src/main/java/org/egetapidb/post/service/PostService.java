@@ -3,6 +3,7 @@ package org.egetapidb.post.service;
 import java.util.List;
 
 import org.egetapidb.post.model.Post;
+import org.egetapidb.user.model.User;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,8 +29,14 @@ public class PostService {
         return em.find(Post.class, id);
     }
 
+    public Post findPostbyUser(Long id) {
+        return em.find(Post.class, id);
+    }
+
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post createPost(Post post) {
+    public Post createPost(Post post, Long userId) {
+        User user = em.find(User.class, userId);
+        post.setUserId(user.getId());
         em.persist(post);
         return post;
     }

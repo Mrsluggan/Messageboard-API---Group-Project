@@ -1,11 +1,8 @@
 package org.egetapidb.post.model;
 
-import org.egetapidb.user.model.User;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,10 +13,7 @@ public class Post {
     private Long idPost;
     private String title;
     private String text;
-
-
-    @ManyToOne
-    private User user;
+    private Long userId;
 
     public Post() {
     }
@@ -52,6 +46,14 @@ public class Post {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
 }

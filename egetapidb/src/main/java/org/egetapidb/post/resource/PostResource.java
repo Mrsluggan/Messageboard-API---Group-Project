@@ -45,18 +45,26 @@ public class PostResource {
         return Response.ok(post).build();
     }
 
+    @GET()
+    @Path("/{userId}")
+    public Response getPostByUserId(@PathParam("userId") Long id) {
+        Post post = postService.findPost(id);
+        return Response.ok(post).build();
+    }
+
     // Skapar ny post
     @POST
-    public Response createPost(@Valid Post post) throws URISyntaxException {
+    @Path("/{userId}")
+    public Response createPost(@Valid Post post, @PathParam("userId") Long userId) throws URISyntaxException {
 
-        Post createdPost = postService.createPost(post);
+        Post createdPost = postService.createPost(post, userId);
 
-        URI createdUri = new URI("/api/post/" + createdPost.getIdPost());
+        URI createdUri = new URI(post.getIdPost().toString());
         return Response.created(createdUri).entity(createdPost).build();
 
     }
 
-    //Skapa delete
+    // Skapa delete
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
