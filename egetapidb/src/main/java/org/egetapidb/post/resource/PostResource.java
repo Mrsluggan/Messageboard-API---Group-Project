@@ -48,13 +48,14 @@ public class PostResource {
         return Response.ok(post).build();
     }
 
+    // Hämta alla posts för user
     @GET
-    @Operation(summary = "Visa specifikt inlägg av specifik användare", description = "Hämtar och visar det angivna inlägget skapat av specifik användare.")
     @Path("/{userId}")
-    public Response getPostByUserId(@PathParam("userId") Long id) {
-        Post post = postService.findPost(id);
-        return Response.ok(post).build();
+    public Response getPostsByUserId(@PathParam("userId") Long userId) {
+        List<Post> posts = postService.findPostbyUser(userId);
+        return Response.ok(posts).build();
     }
+
 
     @POST
     @Operation(summary = "Skapa inlägg", description = "Skapar ett inlägg och sparar det i databasen.")
