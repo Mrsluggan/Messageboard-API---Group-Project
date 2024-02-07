@@ -25,7 +25,7 @@ public class User {
     private String username;
     private UUID apikey;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
     public String getUsername() {
