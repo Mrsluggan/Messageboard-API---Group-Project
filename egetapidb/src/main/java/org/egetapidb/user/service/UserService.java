@@ -43,6 +43,10 @@ public class UserService {
         em.remove(em.getReference(User.class, id));
     }
 
+    public Long countAllUsers() {
+        return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
+    }
+
     
 
 }

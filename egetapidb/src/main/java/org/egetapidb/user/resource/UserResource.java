@@ -64,4 +64,12 @@ public class UserResource {
         userService.deleteUser(id);
         return Response.noContent().build();
     } 
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/count")
+    public Response countUsers() {
+        Long countPosts = userService.countAllUsers();
+        return Response.ok(countPosts).build();
+    }
 } 
