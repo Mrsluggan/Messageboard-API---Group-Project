@@ -1,12 +1,7 @@
 
-    alter table if exists users_Post 
-       drop constraint if exists FKny4b7thmva88g7e8oji2fe5m1;
-
-    alter table if exists users_Post 
-       drop constraint if exists FKs95kqgg4wgnctmjnrn0k2rydx;
+    alter table if exists Post 
+       drop constraint if exists FK58gj8nsg0ksi7s2y8jjtguap7;
 
     drop table if exists Post cascade;
 
     drop table if exists users cascade;
-
-    drop table if exists users_Post cascade;
