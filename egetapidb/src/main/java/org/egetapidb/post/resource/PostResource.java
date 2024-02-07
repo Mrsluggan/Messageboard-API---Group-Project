@@ -38,20 +38,15 @@ public class PostResource {
         }
     }
 
-    @GET()
-    @Path("/{id}")
-    public Response getPost(@PathParam("id") Long id) {
-        Post post = postService.findPost(id);
-        return Response.ok(post).build();
-    }
 
     // Hämta alla posts för user
-    @GET()
+    @GET
     @Path("/{userId}")
-    public Response getPostByUserId(@PathParam("userId") Long id) {
-        Post post = postService.findPost(id);
-        return Response.ok(post).build();
+    public Response getPostsByUserId(@PathParam("userId") Long userId) {
+        List<Post> posts = postService.findPostbyUser(userId);
+        return Response.ok(posts).build();
     }
+
 
     @POST
     @Path("/{userId}")
