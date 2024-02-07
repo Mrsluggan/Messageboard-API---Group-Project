@@ -29,6 +29,7 @@ public class PostService {
         return em.find(Post.class, id);
     }
 
+    // Metod för att hämta posts av user
     public Post findPostbyUser(Long id) {
         return em.find(Post.class, id);
     }
@@ -39,6 +40,15 @@ public class PostService {
         post.setUserId(user.getId());
         em.persist(post);
         return post;
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void deletePost(Long userId, Long id) {
+        User user = em.find(User.class, userId);
+        if (user.getId().equals(userId)) {
+            em.remove(em.getReference(Post.class, id));
+        }
+
     }
 
     public Long countAllPosts() {
