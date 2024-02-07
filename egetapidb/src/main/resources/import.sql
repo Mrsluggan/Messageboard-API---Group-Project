@@ -4,3 +4,9 @@
 -- insert into myentity (id, field) values(2, 'field-2');
 -- insert into myentity (id, field) values(3, 'field-3');
 -- alter sequence myentity_seq restart with 4;
+
+INSERT INTO users (username, apikey) VALUES ('Dennis', '4b3029f1-98d5-4cf4-9d05-9b3a8a857d2b');
+INSERT INTO users (username, apikey) VALUES ('Love', '8d2d68f2-5b51-4a9f-8f64-320a8bc47b1c');
+INSERT INTO users (username, apikey) VALUES ('Eric', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7e');
+INSERT INTO users (username, apikey) VALUES ('Sam', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7c');
+INSERT INTO users (username, apikey) VALUES ('Viktor', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7f');

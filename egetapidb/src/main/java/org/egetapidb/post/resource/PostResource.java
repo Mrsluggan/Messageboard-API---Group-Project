@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -37,7 +38,6 @@ public class PostResource {
         }
     }
 
-    // Hämtar specifk post
     @GET()
     @Path("/{id}")
     public Response getPost(@PathParam("id") Long id) {
@@ -45,6 +45,7 @@ public class PostResource {
         return Response.ok(post).build();
     }
 
+    // Hämta alla posts för user
     @GET()
     @Path("/{userId}")
     public Response getPostByUserId(@PathParam("userId") Long id) {
@@ -52,7 +53,6 @@ public class PostResource {
         return Response.ok(post).build();
     }
 
-    // Skapar ny post
     @POST
     @Path("/{userId}")
     public Response createPost(@Valid Post post, @PathParam("userId") Long userId) throws URISyntaxException {
@@ -64,7 +64,12 @@ public class PostResource {
 
     }
 
-    // Skapa delete
+    @DELETE
+    @Path("/{userId}/post/{postId}")
+    public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId) {
+        postService.deletePost(userId, postId);
+        return Response.noContent().build();
+    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
