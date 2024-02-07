@@ -1,11 +1,15 @@
 package org.egetapidb.user.model;
 
+import java.util.List;
 import java.util.UUID;
+
+import org.egetapidb.post.model.Post;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -20,6 +24,9 @@ public class User {
     @Column
     private String username;
     private UUID apikey;
+
+    @OneToMany(mappedBy = "users")
+    private List<Post> posts;
 
     public String getUsername() {
         return username;
