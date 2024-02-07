@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.post.service.PostService;
 
@@ -27,6 +28,7 @@ public class PostResource {
 
     // Hämtar alla posts
     @GET
+    @Operation(summary = "Visa alla inlägg", description = "Hämtar och visar alla inlägg som finns sparade i databasen.")
     public Response getAllPosts() {
 
         List<Post> posts = postService.findAll();
@@ -38,6 +40,13 @@ public class PostResource {
         }
     }
 
+    @GET
+    @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
+    @Path("/{id}")
+    public Response getPost(@PathParam("id") Long id) {
+        Post post = postService.findPost(id);
+        return Response.ok(post).build();
+    }
 
     // Hämta alla posts för user
     @GET
@@ -49,6 +58,7 @@ public class PostResource {
 
 
     @POST
+    @Operation(summary = "Skapa inlägg", description = "Skapar ett inlägg och sparar det i databasen.")
     @Path("/{userId}")
     public Response createPost(@Valid Post post, @PathParam("userId") Long userId) throws URISyntaxException {
 
@@ -60,6 +70,7 @@ public class PostResource {
     }
 
     @DELETE
+    @Operation(summary = "Ta bort inlägg", description = "Tar bort angivet inlägg och raderar inlägget från databasen.")
     @Path("/{userId}/post/{postId}")
     public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId) {
         postService.deletePost(userId, postId);
@@ -67,6 +78,7 @@ public class PostResource {
     }
 
     @GET
+    @Operation(summary = "Räkna inlägg", description = "Räknar och visar antalet inlägg som finns sparade i databasen.")
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
     public Response countPosts() {

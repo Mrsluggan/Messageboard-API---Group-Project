@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
 import jakarta.inject.Inject;
@@ -29,6 +29,7 @@ public class UserResource {
     UserService userService;
 
     @GET
+    @Operation(summary = "Visa alla användare", description = "Hämtar och visar alla användare som finns sparade i databasen.")
     public Response getUsers() {
 
         List<User> users = userService.findAll();
@@ -42,6 +43,7 @@ public class UserResource {
 
 
     @GET
+    @Operation(summary = "Visa specifik användare", description = "Hämtar och visar användaren med det angivna id:t.")
     @Path("/{id}")
     public Response getUserById(@PathParam("id") Long id) {
         User user = userService.findUser(id);
@@ -49,6 +51,7 @@ public class UserResource {
     }
  
     @POST
+    @Operation(summary = "Skapa användare", description = "Skapar en ny användare och sparar den i databasen.")
     public Response createUser(@Valid User user) throws URISyntaxException {
 
         user = userService.create(user);
@@ -59,6 +62,7 @@ public class UserResource {
     }
  
     @DELETE
+    @Operation(summary = "Ta bort användare", description = "Tar bort angiven användare och raderar den från databasen.")
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") Long id) {
         userService.deleteUser(id);
@@ -66,6 +70,7 @@ public class UserResource {
     } 
 
     @GET
+    @Operation(summary = "Räkna användare", description = "Räknar och visar antalet användare som finns sparade i databasen.")
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
     public Response countUsers() {
