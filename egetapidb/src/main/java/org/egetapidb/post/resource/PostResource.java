@@ -42,7 +42,7 @@ public class PostResource {
 
     @GET
     @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
-    @Path("/post{id}")
+    @Path("/{id}")
     public Response getPost(@PathParam("id") Long id) {
         Post post = postService.findPost(id);
         return Response.ok(post).build();
