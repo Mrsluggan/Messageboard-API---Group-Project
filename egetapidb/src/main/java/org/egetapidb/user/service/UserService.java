@@ -1,6 +1,10 @@
 package org.egetapidb.user.service;
 
+import org.egetapidb.developer.service.DeveloperService;
 import org.egetapidb.user.model.User;
+
+import io.quarkus.security.UnauthorizedException;
+
 import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,36 +21,48 @@ public class UserService {
     @Inject
     EntityManager em;
 
-    UUID uuid;
+    @Inject
+    DeveloperService developerService;
 
-    public List<User> findAll() {
-      List<User> users = em.createQuery("SELECT u FROM User u", User.class).getResultList();
-      return users;
+    public List<User> findAll(UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
+        List<User> users = em.createQuery("SELECT u FROM User u", User.class).getResultList();
+        return users;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public User create(User user) {
-        user.setApikey(UUID.randomUUID());
+    public User create(User user, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+
+        }
         em.persist(user);
         return user;
     }
 
-    public User findUser(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID is required for loading asshole!");
+    public User findUser(Long id, UUID apiKey) {
+
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
         }
+
         return em.find(User.class, id);
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+
+        }
         em.remove(em.getReference(User.class, id));
     }
 
-    public Long countAllUsers() {
+    public Long countAllUsers(UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
     }
-
-    
-
 }
