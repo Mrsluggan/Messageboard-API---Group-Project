@@ -1,7 +1,5 @@
 package org.egetapidb.user.model;
 
-import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +18,6 @@ public class User {
     @NotEmpty(message = "Du måste ange ett namn")
     @Column
     private String username;
-    private UUID apikey;
 
     public String getUsername() {
         return username;
@@ -28,14 +25,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public UUID getApikey() {
-        return apikey;
-    }
-
-    public void setApikey(UUID apikey) {
-        this.apikey = apikey;
     }
 
     public Long getId() {
