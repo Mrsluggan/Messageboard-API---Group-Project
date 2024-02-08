@@ -74,6 +74,17 @@ public class PostService {
 
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changePost(Long userId, Long postId, Post newPost) {
+        Post post = em.find(Post.class, postId);
+        User user = em.find(User.class, userId);
+        if (user.getId().equals(userId)) {
+            post.setTitle(newPost.getTitle());
+            post.setText(newPost.getText());
+            em.merge(post);
+        } 
+        }
+
     public Long countAllPosts(UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
