@@ -41,8 +41,8 @@ public class PostResource {
     }
 
     @GET
-    @Operation(summary = "Visa inlägg", description = "Hämtar och visar det angivna inlägget.")
-    @Path("/{id}")
+    @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
+    @Path("/post{id}")
     public Response getPost(@PathParam("id") Long id) {
         Post post = postService.findPost(id);
         return Response.ok(post).build();
@@ -50,8 +50,7 @@ public class PostResource {
 
     // Hämta alla posts för user
     @GET
-    @Operation(summary = "Visa alla inlägg av specifik användare", description = "Hämtar och visar alla inlägg gjorda av angiven användare.")
-    @Path("/{userId}")
+    @Path("/user/{userId}")
     public Response getPostsByUserId(@PathParam("userId") Long userId) {
         List<Post> posts = postService.findPostbyUser(userId);
         return Response.ok(posts).build();
