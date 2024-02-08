@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.post.service.PostService;
-import org.egetapidb.user.model.User;
 
-import io.quarkus.security.UnauthorizedException;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 
@@ -19,6 +18,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
@@ -82,6 +82,17 @@ public class PostResource {
         postService.deletePost(userId, postId, apiKey);
         return Response.noContent().build();
     }
+
+    @PATCH
+    @Operation(summary = "Ändra inlägg", description = "Ändrar angivet inlägg från databasen.")
+    @Path("/{userId}/post/{postId}")
+    public Response changePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, 
+    @RequestBody Post newPost,
+    @HeaderParam("API-Key") UUID apiKey) {
+        postService.changePost(userId, postId, newPost);
+        return Response.noContent().build();
+    }
+
 
     @GET
     @Operation(summary = "Räkna inlägg", description = "Räknar och visar antalet inlägg som finns sparade i databasen.")
