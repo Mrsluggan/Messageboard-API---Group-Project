@@ -50,9 +50,11 @@ public class PostResource {
         Post post = postService.findPost(id, apiKey);
         return Response.ok(post).build();
     }
+   
 
     // Hämta alla posts för user
     @GET
+    @Operation(summary = "Visa alla inlägg från en användare", description = "Hämtar och visar alla de inlägg som är skapade av den angivna användaren.")
     @Path("/user/{userId}")
     public Response getPostsByUserId(@PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey) {
         List<Post> posts = postService.findPostbyUser(userId, apiKey);

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "Post")
@@ -11,7 +12,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long idPost;
+    @NotEmpty(message = "Du måste ange en titel")
     private String title;
+    @NotEmpty(message = "Du måste ange en text")
     private String text;
     private Long userId;
 
