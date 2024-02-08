@@ -50,6 +50,7 @@ public class PostResource {
 
     // Hämta alla posts för user
     @GET
+    @Operation(summary = "Visa alla inlägg från en användare", description = "Hämtar och visar alla de inlägg som är skapade av den angivna användaren.")
     @Path("/user/{userId}")
     public Response getPostsByUserId(@PathParam("userId") Long userId) {
         List<Post> posts = postService.findPostbyUser(userId);

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
@@ -14,12 +15,12 @@ public class Post {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long idPost;
 
-    @NotEmpty(message = "Title cannot be null")
-    @Size(min = 1, max = 100, message = "Title must be between 1 and 100 characters")
+    @NotEmpty(message = "Du måste ange en titel")
+    @Size(min = 1, max = 100)
     private String title;
-
-    @NotEmpty(message = "Text cannot be null")
-    @Size(min = 1, max = 500, message = "Text must be between 1 and 500 characters")
+  
+    @NotEmpty(message = "Du måste ange en text")
+    @Size(min = 1, max = 500)
     private String text;
     private Long userId;
 
