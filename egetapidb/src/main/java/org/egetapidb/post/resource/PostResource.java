@@ -20,6 +20,7 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -90,6 +91,24 @@ public class PostResource {
     public Response countPosts(@HeaderParam("API-Key") UUID apiKey) {
         Long countPosts = postService.countAllPosts(apiKey);
         return Response.ok(countPosts).build();
+    }
+
+
+    @PUT
+    @Path("{postId}/like")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response likePost(@PathParam("postId") Long postId){
+        Post post = postService.findPost(postId);
+        postService.updateLike(post, postId);        
+        return Response.ok(post).build();
+    }
+    @PUT
+    @Path("{postId}/dislike")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response dislikePost(@PathParam("postId") Long postId){
+        Post post = postService.findPost(postId);
+        postService.updateDislike(post, postId);        
+        return Response.ok(post).build();
     }
 
 }
