@@ -1,4 +1,11 @@
 
+    create table Developer (
+        devId bigserial not null,
+        apiKey uuid,
+        email varchar(255),
+        primary key (devId)
+    );
+
     create table Post (
         dislikes integer not null,
         likes integer not null,
@@ -12,7 +19,6 @@
 
     create table users (
         id bigserial not null,
-        apikey uuid,
         username varchar(255),
         primary key (id)
     );
@@ -27,3 +33,4 @@ INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pannkako
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Hamburgare är gott', 2, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pizza är gott', 2, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pannkakor är gott', 2, 0, 0);
+

@@ -1,10 +1,13 @@
 package org.egetapidb.post.service;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.egetapidb.developer.service.DeveloperService;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.user.model.User;
 
+import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -19,18 +22,30 @@ public class PostService {
     @Inject
     EntityManager em;
 
-    public List<Post> findAll() {
+    @Inject
+    DeveloperService developerService;
+
+    public List<Post> findAll(UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         List<Post> posts = em.createQuery("SELECT p FROM Post p", Post.class).getResultList();
         return posts;
-
     }
 
-    public Post findPost(Long id) {
+    public Post findPost(Long id, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         return em.find(Post.class, id);
     }
 
-    // Metod för att hämta posts av user
-    public List<Post> findPostbyUser(Long userId) {
+
+    public List<Post> findPostbyUser(Long userId, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
+
         jakarta.persistence.TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.userId = :userId",
                 Post.class);
         query.setParameter("userId", userId);
@@ -38,7 +53,10 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post createPost(Post post, Long userId) {
+    public Post createPost(Post post, Long userId, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         User user = em.find(User.class, userId);
         post.setUserId(user.getId());
         em.persist(post);
@@ -46,7 +64,10 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void deletePost(Long userId, Long id) {
+    public void deletePost(Long userId, Long id, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         User user = em.find(User.class, userId);
         if (user.getId().equals(userId)) {
             em.remove(em.getReference(Post.class, id));
@@ -54,7 +75,10 @@ public class PostService {
 
     }
 
-    public Long countAllPosts() {
+    public Long countAllPosts(UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         return em.createQuery("SELECT COUNT(p) FROM Post p", Long.class).getSingleResult();
     }
 
@@ -72,6 +96,9 @@ public class PostService {
         return post;
 
     }
+
+
+}
 
 
 }
