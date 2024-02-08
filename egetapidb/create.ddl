@@ -22,15 +22,15 @@
         username varchar(255),
         primary key (id)
     );
-INSERT INTO users (username, apikey) VALUES ('Dennis', '4b3029f1-98d5-4cf4-9d05-9b3a8a857d2b');
-INSERT INTO users (username, apikey) VALUES ('Love', '8d2d68f2-5b51-4a9f-8f64-320a8bc47b1c');
-INSERT INTO users (username, apikey) VALUES ('Eric', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7e');
-INSERT INTO users (username, apikey) VALUES ('Sam', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7c');
-INSERT INTO users (username, apikey) VALUES ('Viktor', 'ac5a1fc4-3f39-44f8-bb6d-18491d9a4b7f');
+INSERT INTO users (username) VALUES ('Dennis');
+INSERT INTO users (username) VALUES ('Love');
+INSERT INTO users (username) VALUES ('Eric');
+INSERT INTO users (username) VALUES ('Sam');
+INSERT INTO users (username) VALUES ('Viktor');
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Hamburgare är gott', 1, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pizza är gott', 1, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pannkakor är gott', 1, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Hamburgare är gott', 2, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pizza är gott', 2, 0, 0);
 INSERT INTO Post (title, text, userId, likes, dislikes) VALUES ('Mat', 'Pannkakor är gott', 2, 0, 0);
-
+INSERT INTO Developer ( email, apikey) VALUES ( 'jan.banan@gmail.com', 'a9991969-8b6a-413c-ae14-82dc423e4425');
