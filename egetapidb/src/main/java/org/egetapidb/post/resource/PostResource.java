@@ -3,11 +3,14 @@ package org.egetapidb.post.resource;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.post.service.PostService;
+import org.egetapidb.user.model.User;
 
+import io.quarkus.security.UnauthorizedException;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 
@@ -15,6 +18,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
@@ -29,40 +33,39 @@ public class PostResource {
     // Hämtar alla posts
     @GET
     @Operation(summary = "Visa alla inlägg", description = "Hämtar och visar alla inlägg som finns sparade i databasen.")
-    public Response getAllPosts() {
+    public Response getAllPosts(@HeaderParam("API-Key") UUID apiKey) {
+        List<Post> posts = postService.findAll(apiKey);
 
-        List<Post> posts = postService.findAll();
         if (posts.isEmpty()) {
             return Response.noContent().build();
-        } else {
-            return Response.ok(posts).build();
-
         }
+
+        return Response.ok(posts).build();
     }
 
     @GET
     @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
-    @Path("/post{id}")
-    public Response getPost(@PathParam("id") Long id) {
-        Post post = postService.findPost(id);
+    @Path("/{id}")
+    public Response getPost(@PathParam("id") Long id, @HeaderParam("API-Key") UUID apiKey) {
+        Post post = postService.findPost(id, apiKey);
         return Response.ok(post).build();
     }
 
     // Hämta alla posts för user
     @GET
     @Path("/user/{userId}")
-    public Response getPostsByUserId(@PathParam("userId") Long userId) {
-        List<Post> posts = postService.findPostbyUser(userId);
+    public Response getPostsByUserId(@PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey) {
+        List<Post> posts = postService.findPostbyUser(userId, apiKey);
         return Response.ok(posts).build();
     }
-
 
     @POST
     @Operation(summary = "Skapa inlägg", description = "Skapar ett inlägg och sparar det i databasen.")
     @Path("/{userId}")
-    public Response createPost(@Valid Post post, @PathParam("userId") Long userId) throws URISyntaxException {
+    public Response createPost(@Valid Post post, @PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey)
+            throws URISyntaxException {
 
-        Post createdPost = postService.createPost(post, userId);
+        Post createdPost = postService.createPost(post, userId, apiKey);
 
         URI createdUri = new URI(post.getIdPost().toString());
         return Response.created(createdUri).entity(createdPost).build();
@@ -72,8 +75,9 @@ public class PostResource {
     @DELETE
     @Operation(summary = "Ta bort inlägg", description = "Tar bort angivet inlägg och raderar inlägget från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId) {
-        postService.deletePost(userId, postId);
+    public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+            @HeaderParam("API-Key") UUID apiKey) {
+        postService.deletePost(userId, postId, apiKey);
         return Response.noContent().build();
     }
 
@@ -81,8 +85,8 @@ public class PostResource {
     @Operation(summary = "Räkna inlägg", description = "Räknar och visar antalet inlägg som finns sparade i databasen.")
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
-    public Response countPosts() {
-        Long countPosts = postService.countAllPosts();
+    public Response countPosts(@HeaderParam("API-Key") UUID apiKey) {
+        Long countPosts = postService.countAllPosts(apiKey);
         return Response.ok(countPosts).build();
     }
 
