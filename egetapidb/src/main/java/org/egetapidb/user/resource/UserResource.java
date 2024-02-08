@@ -10,6 +10,7 @@ import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -64,7 +65,7 @@ public class UserResource {
     @DELETE
     @Operation(summary = "Ta bort användare", description = "Tar bort angiven användare och raderar den från databasen.")
     @Path("/{id}")
-    public Response deleteUser(@PathParam("id") Long id, @HeaderParam("API-Key") UUID apiKey) {
+    public Response deleteUser(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         userService.deleteUser(id, apiKey);
         return Response.noContent().build();
     }
