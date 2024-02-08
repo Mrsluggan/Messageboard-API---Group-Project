@@ -31,7 +31,8 @@ public class PostService {
 
     // Metod för att hämta posts av user
     public List<Post> findPostbyUser(Long userId) {
-        jakarta.persistence.TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.userId = :userId", Post.class);
+        jakarta.persistence.TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.userId = :userId",
+                Post.class);
         query.setParameter("userId", userId);
         return query.getResultList();
     }
@@ -57,4 +58,21 @@ public class PostService {
         return em.createQuery("SELECT COUNT(p) FROM Post p", Long.class).getSingleResult();
     }
 
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Post updateLike(Post post, Long id){
+        post.increaseLikes();
+        em.merge(post);
+        return post;
+
+    }
+    @Transactional(Transactional.TxType.REQUIRED)
+    public Post updateDislike(Post post, Long id){
+        post.increaseDislikes();
+        em.merge(post);
+        return post;
+
+    }
+
+
 }
+
