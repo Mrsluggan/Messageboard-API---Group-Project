@@ -40,7 +40,6 @@ public class PostService {
         return em.find(Post.class, id);
     }
 
-
     public List<Post> findPostbyUser(Long userId, UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
@@ -83,23 +82,19 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateLike(Post post, Long id){
+    public Post updateLike(Post post, Long id) {
         post.increaseLikes();
         em.merge(post);
         return post;
 
     }
+
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateDislike(Post post, Long id){
+    public Post updateDislike(Post post, Long id) {
         post.increaseDislikes();
         em.merge(post);
         return post;
 
     }
 
-
 }
-
-
-}
-

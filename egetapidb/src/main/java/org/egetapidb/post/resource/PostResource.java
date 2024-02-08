@@ -51,7 +51,6 @@ public class PostResource {
         Post post = postService.findPost(id, apiKey);
         return Response.ok(post).build();
     }
-   
 
     // Hämta alla posts för user
     @GET
@@ -93,21 +92,21 @@ public class PostResource {
         return Response.ok(countPosts).build();
     }
 
-
     @PUT
     @Path("{postId}/like")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likePost(@PathParam("postId") Long postId){
-        Post post = postService.findPost(postId);
-        postService.updateLike(post, postId);        
+    public Response likePost(@PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+        Post post = postService.findPost(postId, apiKey);
+        postService.updateLike(post, postId);
         return Response.ok(post).build();
     }
+
     @PUT
     @Path("{postId}/dislike")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dislikePost(@PathParam("postId") Long postId){
-        Post post = postService.findPost(postId);
-        postService.updateDislike(post, postId);        
+    public Response dislikePost(@PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+        Post post = postService.findPost(postId, apiKey);
+        postService.updateDislike(post, postId);
         return Response.ok(post).build();
     }
 
