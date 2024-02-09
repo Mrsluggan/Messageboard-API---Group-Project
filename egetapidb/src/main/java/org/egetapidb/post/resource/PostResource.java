@@ -67,7 +67,7 @@ public class PostResource {
 
         Post createdPost = postService.createPost(post, userId, apiKey);
 
-        URI createdUri = new URI(post.getIdPost().toString());
+        URI createdUri = new URI(post.getPostId().toString());
         return Response.created(createdUri).entity(createdPost).build();
 
     }
@@ -117,7 +117,6 @@ public class PostResource {
             postService.updateLike(post, postId, userId, apiKey);
             return Response.ok(post).build();
         }
-
     }
 
     @PUT
@@ -136,5 +135,4 @@ public class PostResource {
         postService.updateDislike(post, postId, userId, apiKey);
         return Response.ok(post).build();
     }
-
 }

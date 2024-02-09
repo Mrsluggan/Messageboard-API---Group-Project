@@ -5,6 +5,8 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class Developer {
@@ -12,6 +14,8 @@ public class Developer {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long devId;
+    @NotEmpty(message = "Du måste ange ett namn")
+    @Pattern(regexp = "^[^\\s]+$", message = "Ogiltig e-postadress")
     private String email;
     private UUID apiKey;
 

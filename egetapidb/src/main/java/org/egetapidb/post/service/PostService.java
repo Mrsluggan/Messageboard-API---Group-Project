@@ -114,5 +114,4 @@ public class PostService {
         em.merge(post);
         return post;
     }
-
 }

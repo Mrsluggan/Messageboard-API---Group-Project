@@ -9,13 +9,13 @@
     create table Post (
         dislikes integer not null,
         likes integer not null,
-        idPost bigserial not null,
+        postId bigserial not null,
         userId bigint,
         text varchar(255),
         title varchar(255),
         whoDisliked bigint array,
         whoLiked bigint array,
-        primary key (idPost)
+        primary key (postId)
     );
 
     create table users (

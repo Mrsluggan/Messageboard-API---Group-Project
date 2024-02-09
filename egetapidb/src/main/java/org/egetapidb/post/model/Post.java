@@ -16,7 +16,7 @@ import jakarta.validation.constraints.Size;
 public class Post {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private Long idPost;
+    private Long postId;
 
     @NotEmpty(message = "Du måste ange en titel")
     @Size(min = 1, max = 100)
@@ -59,12 +59,12 @@ public class Post {
         this.dislikes = dislikes;
     }
 
-    public Long getIdPost() {
-        return idPost;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setIdPost(Long idPost) {
-        this.idPost = idPost;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getTitle() {
