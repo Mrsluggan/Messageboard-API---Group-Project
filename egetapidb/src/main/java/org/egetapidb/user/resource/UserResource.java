@@ -6,16 +6,22 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
 import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
+
 import jakarta.inject.Inject;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -68,6 +74,16 @@ public class UserResource {
     public Response deleteUser(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         userService.deleteUser(id, apiKey);
         return Response.noContent().build();
+    }
+
+    @PATCH
+    @Operation(summary = "Ändra username på användare", description = "Ändrar till angivet username från user entitet i databasen.")
+    @Path("/{userId}")
+    public Response changePost(@PathParam("userId") Long userId,
+            @RequestBody String newUser,
+            @HeaderParam("API-Key") UUID apiKey) {
+        userService.changeUser(userId, newUser, apiKey);
+        return Response.ok().build();
     }
 
     @GET
