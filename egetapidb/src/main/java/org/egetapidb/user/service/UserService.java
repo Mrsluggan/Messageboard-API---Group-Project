@@ -42,7 +42,6 @@ public class UserService {
     }
 
     public User findUser(Long id, UUID apiKey) {
-
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
@@ -65,4 +64,18 @@ public class UserService {
         }
         return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
     }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changeUser(Long userId, String newUser, UUID apiKey) { {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
+            User user = em.find(User.class, userId);
+
+            if (user.getId().equals(userId)) {
+                user.setUsername(newUser);
+                em.merge(user);
+            }
+        }
+}
 }

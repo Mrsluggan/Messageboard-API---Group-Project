@@ -31,7 +31,6 @@ public class PostResource {
     @Inject
     PostService postService;
 
-    // Hämtar alla posts
     @GET
     @Operation(summary = "Visa alla inlägg", description = "Hämtar och visar alla inlägg som finns sparade i databasen.")
     public Response getAllPosts(@HeaderParam("API-Key") UUID apiKey) {
@@ -52,7 +51,6 @@ public class PostResource {
         return Response.ok(post).build();
     }
 
-    // Hämta alla posts för user
     @GET
     @Operation(summary = "Visa alla inlägg från en användare", description = "Hämtar och visar alla de inlägg som är skapade av den angivna användaren.")
     @Path("/user/{userId}")
@@ -90,7 +88,7 @@ public class PostResource {
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         postService.changePost(userId, postId, newPost);
-        return Response.noContent().build();
+        return Response.ok().build();
     }
 
     @GET
