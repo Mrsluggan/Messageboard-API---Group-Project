@@ -106,7 +106,8 @@ public class PostResource {
     @Operation(summary = "Öka likes på inlägg", description = "Tar in postId och uppdaterar den posten likes med 1")
     @Path("{userId}/like/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+            @HeaderParam("API-Key") UUID apiKey) {
 
         Post post = postService.findPost(postId, apiKey);
 
@@ -115,7 +116,7 @@ public class PostResource {
                     .entity("Använndare har redan gillat post")
                     .build();
         } else {
-            postService.updateLike(post, postId, userId);
+            postService.updateLike(post, postId, userId, apiKey);
             return Response.ok(post).build();
         }
 
@@ -125,15 +126,16 @@ public class PostResource {
     @Operation(summary = "Öka dislikes på inlägg", description = "Tar in postId och uppdaterar den posten dislikes med 1")
     @Path("{userId}/dislike/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dislikePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response dislikePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+            @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
 
         if (post.getWhoDisliked().contains(userId)) {
             return Response.status(Response.Status.BAD_REQUEST)
-            .entity("Använndare har redan ogillat post")
-            .build();
+                    .entity("Använndare har redan ogillat post")
+                    .build();
         }
-        postService.updateDislike(post, postId, userId);
+        postService.updateDislike(post, postId, userId, apiKey);
         return Response.ok(post).build();
     }
 

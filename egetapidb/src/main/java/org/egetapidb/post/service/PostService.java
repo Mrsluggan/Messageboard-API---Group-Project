@@ -93,7 +93,10 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateLike(Post post, Long id, Long userId) {
+    public Post updateLike(Post post, Long id, Long userId, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         post.getWhoLiked().add(userId);
         post.increaseLikes();
         em.merge(post);
@@ -102,12 +105,14 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateDislike(Post post, Long id, Long userId) {
+    public Post updateDislike(Post post, Long id, Long userId, UUID apiKey) {
+        if (!developerService.isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
         post.getWhoDisliked().add(userId);
         post.increaseDislikes();
         em.merge(post);
         return post;
-
     }
 
 }
