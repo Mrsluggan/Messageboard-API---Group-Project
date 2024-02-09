@@ -86,13 +86,12 @@ public class PostResource {
     @PATCH
     @Operation(summary = "Ändra inlägg", description = "Ändrar angivet inlägg från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response changePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, 
-    @RequestBody Post newPost,
-    @HeaderParam("API-Key") UUID apiKey) {
+    public Response changePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+            @RequestBody Post newPost,
+            @HeaderParam("API-Key") UUID apiKey) {
         postService.changePost(userId, postId, newPost);
         return Response.noContent().build();
     }
-
 
     @GET
     @Operation(summary = "Räkna inlägg", description = "Räknar och visar antalet inlägg som finns sparade i databasen.")
@@ -104,20 +103,37 @@ public class PostResource {
     }
 
     @PUT
-    @Path("{postId}/like")
+    @Operation(summary = "Öka likes på inlägg", description = "Tar in postId och uppdaterar den posten likes med 1")
+    @Path("{userId}/like/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likePost(@PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+
         Post post = postService.findPost(postId, apiKey);
-        postService.updateLike(post, postId);
-        return Response.ok(post).build();
+
+        if (post.getWhoLiked().contains(userId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Använndare har redan gillat post")
+                    .build();
+        } else {
+            postService.updateLike(post, postId, userId);
+            return Response.ok(post).build();
+        }
+
     }
 
     @PUT
-    @Path("{postId}/dislike")
+    @Operation(summary = "Öka dislikes på inlägg", description = "Tar in postId och uppdaterar den posten dislikes med 1")
+    @Path("{userId}/dislike/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dislikePost(@PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response dislikePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId, @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
-        postService.updateDislike(post, postId);
+
+        if (post.getWhoDisliked().contains(userId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+            .entity("Använndare har redan ogillat post")
+            .build();
+        }
+        postService.updateDislike(post, postId, userId);
         return Response.ok(post).build();
     }
 

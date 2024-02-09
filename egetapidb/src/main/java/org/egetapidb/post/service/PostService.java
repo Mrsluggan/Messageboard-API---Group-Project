@@ -82,8 +82,8 @@ public class PostService {
             post.setTitle(newPost.getTitle());
             post.setText(newPost.getText());
             em.merge(post);
-        } 
         }
+    }
 
     public Long countAllPosts(UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
@@ -93,7 +93,8 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateLike(Post post, Long id) {
+    public Post updateLike(Post post, Long id, Long userId) {
+        post.getWhoLiked().add(userId);
         post.increaseLikes();
         em.merge(post);
         return post;
@@ -101,7 +102,8 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateDislike(Post post, Long id) {
+    public Post updateDislike(Post post, Long id, Long userId) {
+        post.getWhoDisliked().add(userId);
         post.increaseDislikes();
         em.merge(post);
         return post;
