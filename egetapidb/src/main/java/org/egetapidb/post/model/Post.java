@@ -1,8 +1,9 @@
 package org.egetapidb.post.model;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,7 +22,7 @@ public class Post {
     @NotEmpty(message = "Du måste ange en titel")
     @Size(min = 1, max = 100)
     private String title;
-  
+
     @NotEmpty(message = "Du måste ange en text")
     @Size(min = 1, max = 500)
     private String text;
@@ -30,7 +31,8 @@ public class Post {
     private int likes;
     private int dislikes;
 
-    private ArrayList<Long> whoLiked = new ArrayList<>();
+    private Set<Long> whoLiked = new HashSet<>();
+    private Set<Long> whoDisliked = new HashSet<>();
 
     public void increaseLikes() {
         this.likes++;
@@ -88,6 +90,22 @@ public class Post {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Set<Long> getWhoLiked() {
+        return whoLiked;
+    }
+
+    public void setWhoLiked(Set<Long> whoLiked) {
+        this.whoLiked = whoLiked;
+    }
+
+    public Set<Long> getWhoDisliked() {
+        return whoDisliked;
+    }
+
+    public void setWhoDisliked(Set<Long> whoDisliked) {
+        this.whoDisliked = whoDisliked;
     }
 
 }
