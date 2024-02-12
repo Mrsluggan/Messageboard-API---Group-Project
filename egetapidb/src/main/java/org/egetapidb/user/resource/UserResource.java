@@ -52,7 +52,7 @@ public class UserResource {
     @GET
     @Operation(summary = "Visa specifik användare", description = "Hämtar och visar användaren med det angivna id:t.")
     @Path("/{id}")
-    public Response getUserById(@PathParam("id") Long id, @HeaderParam("API-Key") UUID apiKey) {
+    public Response getUserById(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         User user = userService.findUser(id, apiKey);
         return Response.ok(user).build();
     }
@@ -79,7 +79,7 @@ public class UserResource {
     @PATCH
     @Operation(summary = "Ändra username på användare", description = "Ändrar till angivet username från user entitet i databasen.")
     @Path("/{userId}")
-    public Response changeUser(@PathParam("userId") Long userId,
+    public Response changeUser(@PathParam("userId") @Min(1) Long userId,
             @RequestBody String newUser,
             @HeaderParam("API-Key") UUID apiKey) {
         userService.changeUser(userId, newUser, apiKey);

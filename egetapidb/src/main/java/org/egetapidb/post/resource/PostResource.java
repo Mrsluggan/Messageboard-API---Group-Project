@@ -12,7 +12,7 @@ import org.egetapidb.post.service.PostService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.DELETE;
@@ -46,7 +46,7 @@ public class PostResource {
     @GET
     @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
     @Path("/{id}")
-    public Response getPost(@PathParam("id") Long id, @HeaderParam("API-Key") UUID apiKey) {
+    public Response getPost(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(id, apiKey);
         return Response.ok(post).build();
     }
@@ -54,7 +54,7 @@ public class PostResource {
     @GET
     @Operation(summary = "Visa alla inlägg från en användare", description = "Hämtar och visar alla de inlägg som är skapade av den angivna användaren.")
     @Path("/user/{userId}")
-    public Response getPostsByUserId(@PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response getPostsByUserId(@PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey) {
         List<Post> posts = postService.findPostbyUser(userId, apiKey);
         return Response.ok(posts).build();
     }
@@ -62,7 +62,7 @@ public class PostResource {
     @POST
     @Operation(summary = "Skapa inlägg", description = "Skapar ett inlägg och sparar det i databasen.")
     @Path("/{userId}")
-    public Response createPost(@Valid Post post, @PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey)
+    public Response createPost(@Valid Post post, @PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey)
             throws URISyntaxException {
 
         Post createdPost = postService.createPost(post, userId, apiKey);
@@ -75,7 +75,7 @@ public class PostResource {
     @DELETE
     @Operation(summary = "Ta bort inlägg", description = "Tar bort angivet inlägg och raderar inlägget från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response deletePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
         postService.deletePost(userId, postId, apiKey);
         return Response.noContent().build();
@@ -84,7 +84,7 @@ public class PostResource {
     @PATCH
     @Operation(summary = "Ändra inlägg", description = "Ändrar angivet inlägg från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response changePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response changePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         postService.changePost(userId, postId, newPost);
@@ -104,7 +104,7 @@ public class PostResource {
     @Operation(summary = "Öka likes på inlägg", description = "Tar in postId och uppdaterar den posten likes med 1")
     @Path("{userId}/like/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response likePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
 
         Post post = postService.findPost(postId, apiKey);
@@ -123,7 +123,7 @@ public class PostResource {
     @Operation(summary = "Öka dislikes på inlägg", description = "Tar in postId och uppdaterar den posten dislikes med 1")
     @Path("{userId}/dislike/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dislikePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response dislikePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
 
