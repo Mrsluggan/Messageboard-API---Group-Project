@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
 
@@ -38,6 +38,14 @@ public class UserResource {
 
     @GET
     @Operation(summary = "Visa alla användare", description = "Hämtar och visar alla användare som finns sparade i databasen.")
+    @APIResponse(
+        responseCode = "200",
+        description = "Alla användare"
+    )
+    @APIResponse(
+        responseCode = "204",
+        description = "Fanns inga användare"
+    )
     public Response getUsers(@HeaderParam("API-Key") UUID apiKey) {
 
         List<User> users = userService.findAll(apiKey);

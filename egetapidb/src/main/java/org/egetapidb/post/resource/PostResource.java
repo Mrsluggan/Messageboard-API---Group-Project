@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.post.service.PostService;
 
@@ -33,6 +34,14 @@ public class PostResource {
 
     @GET
     @Operation(summary = "Visa alla inlägg", description = "Hämtar och visar alla inlägg som finns sparade i databasen.")
+    @APIResponse(
+        responseCode = "200",
+        description = "Alla inlägg"
+    )
+    @APIResponse(
+        responseCode = "204",
+        description = "Fanns inga inlägg"
+    )
     public Response getAllPosts(@HeaderParam("API-Key") UUID apiKey) {
         List<Post> posts = postService.findAll(apiKey);
 
