@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-    @NotEmpty(message = "Du måste ange ett namn")
+    @NotEmpty(message = "Du måste ange ett användarnamn")
     @Column
     private String username;
 

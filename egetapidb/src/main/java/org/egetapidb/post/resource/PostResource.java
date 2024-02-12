@@ -7,17 +7,19 @@ import java.util.UUID;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.post.service.PostService;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-
+import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -33,6 +35,14 @@ public class PostResource {
 
     @GET
     @Operation(summary = "Visa alla inlägg", description = "Hämtar och visar alla inlägg som finns sparade i databasen.")
+    @APIResponse(
+        responseCode = "200",
+        description = "Alla inlägg"
+    )
+    @APIResponse(
+        responseCode = "204",
+        description = "Fanns inga inlägg"
+    )
     public Response getAllPosts(@HeaderParam("API-Key") UUID apiKey) {
         List<Post> posts = postService.findAll(apiKey);
 
@@ -45,16 +55,29 @@ public class PostResource {
 
     @GET
     @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
+    @APIResponse(
+        responseCode = "200",
+        description = "Angivna inlägget visas"
+    )
+    @APIResponse(
+        responseCode = "404",
+        description = "Angivna inlägget hittades inte"
+    )
     @Path("/{id}")
-    public Response getPost(@PathParam("id") Long id, @HeaderParam("API-Key") UUID apiKey) {
-        Post post = postService.findPost(id, apiKey);
-        return Response.ok(post).build();
+    public Response getPost(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
+        try {
+            Post post = postService.findPost(id, apiKey);
+            return Response.ok(post).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+
     }
 
     @GET
     @Operation(summary = "Visa alla inlägg från en användare", description = "Hämtar och visar alla de inlägg som är skapade av den angivna användaren.")
     @Path("/user/{userId}")
-    public Response getPostsByUserId(@PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response getPostsByUserId(@PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey) {
         List<Post> posts = postService.findPostbyUser(userId, apiKey);
         return Response.ok(posts).build();
     }
@@ -62,7 +85,7 @@ public class PostResource {
     @POST
     @Operation(summary = "Skapa inlägg", description = "Skapar ett inlägg och sparar det i databasen.")
     @Path("/{userId}")
-    public Response createPost(@Valid Post post, @PathParam("userId") Long userId, @HeaderParam("API-Key") UUID apiKey)
+    public Response createPost(@Valid Post post, @PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey)
             throws URISyntaxException {
 
         Post createdPost = postService.createPost(post, userId, apiKey);
@@ -75,7 +98,7 @@ public class PostResource {
     @DELETE
     @Operation(summary = "Ta bort inlägg", description = "Tar bort angivet inlägg och raderar inlägget från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response deletePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response deletePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
         postService.deletePost(userId, postId, apiKey);
         return Response.noContent().build();
@@ -84,7 +107,7 @@ public class PostResource {
     @PATCH
     @Operation(summary = "Ändra inlägg", description = "Ändrar angivet inlägg från databasen.")
     @Path("/{userId}/post/{postId}")
-    public Response changePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response changePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         postService.changePost(userId, postId, newPost);
@@ -104,7 +127,7 @@ public class PostResource {
     @Operation(summary = "Öka likes på inlägg", description = "Tar in postId och uppdaterar den posten likes med 1")
     @Path("{userId}/like/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response likePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
 
         Post post = postService.findPost(postId, apiKey);
@@ -123,7 +146,7 @@ public class PostResource {
     @Operation(summary = "Öka dislikes på inlägg", description = "Tar in postId och uppdaterar den posten dislikes med 1")
     @Path("{userId}/dislike/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dislikePost(@PathParam("userId") Long userId, @PathParam("postId") Long postId,
+    public Response dislikePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
 

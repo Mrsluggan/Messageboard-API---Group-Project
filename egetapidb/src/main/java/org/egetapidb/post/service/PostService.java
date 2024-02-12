@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 @Transactional(Transactional.TxType.SUPPORTS)
 @ApplicationScoped
@@ -37,7 +38,13 @@ public class PostService {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
-        return em.find(Post.class, id);
+
+        Post post = em.find(Post.class, id);
+        
+        if (post == null) {
+            throw new NotFoundException("Inlägget med det angivna id:t hittades inte.");
+        }
+        return post;
     }
 
     public List<Post> findPostbyUser(Long userId, UUID apiKey) {
