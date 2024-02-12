@@ -12,6 +12,7 @@ xmlns:p="http://primefaces.org/ui"
         <p><p:commandButton value="Registrera dig!" action="#{developerBean.newDeveloper}" process="@form" update="updateApiKey"/></p>
     </h:form>
 
-    <h:outputText id="updateApiKey" value="Din API-nyckel: #{developerBean.apiKey}" rendered="#{not empty developerBean.apiKey}"/>
+    <h:outputText id="updateApiKey" value="Din API-nyckel: #{developerBean.apiKey}"/>
+    
 </h:body>
 </html>
