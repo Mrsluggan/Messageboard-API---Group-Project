@@ -2,7 +2,7 @@
     create table Developer (
         devId bigserial not null,
         apiKey uuid,
-        email varchar(255),
+        email varchar(255) unique,
         primary key (devId)
     );
 

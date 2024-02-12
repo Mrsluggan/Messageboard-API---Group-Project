@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.egetapidb.developer.model.Developer;
 
+import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -22,10 +23,25 @@ public class DeveloperService {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public Developer createDev(Developer developer) {
-        UUID apiKey = UUID.randomUUID();
-        developer.setApiKey(apiKey);
-        em.persist(developer);
-        return developer;
+
+        String email = developer.getEmail();
+
+        Developer existingDeveloper = em
+                .createQuery("SELECT d FROM Developer d WHERE d.email = :email", Developer.class)
+                .setParameter("email", email)
+                .getResultStream()
+                .findFirst()
+                .orElse(null);
+        if (existingDeveloper != null) {
+
+            throw new UnauthorizedException("Inte giltligt!");
+        } else {
+
+            UUID apiKey = UUID.randomUUID();
+            developer.setApiKey(apiKey);
+            em.persist(developer);
+            return developer;
+        }
     }
 
     public boolean isApiKeyValid(UUID apiKey) {

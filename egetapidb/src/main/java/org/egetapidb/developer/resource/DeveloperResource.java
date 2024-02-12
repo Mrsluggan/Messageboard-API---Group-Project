@@ -49,5 +49,4 @@ public class DeveloperResource {
 
         return Response.ok(devs).build();
     }
-
 }
