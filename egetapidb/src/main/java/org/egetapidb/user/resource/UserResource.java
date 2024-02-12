@@ -79,7 +79,7 @@ public class UserResource {
     @PATCH
     @Operation(summary = "Ändra username på användare", description = "Ändrar till angivet username från user entitet i databasen.")
     @Path("/{userId}")
-    public Response changePost(@PathParam("userId") Long userId,
+    public Response changeUser(@PathParam("userId") Long userId,
             @RequestBody String newUser,
             @HeaderParam("API-Key") UUID apiKey) {
         userService.changeUser(userId, newUser, apiKey);
