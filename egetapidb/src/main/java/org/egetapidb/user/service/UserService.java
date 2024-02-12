@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 @Transactional(Transactional.TxType.SUPPORTS)
 @ApplicationScoped
@@ -45,8 +46,13 @@ public class UserService {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
+        
+        User user = em.find(User.class, id);
 
-        return em.find(User.class, id);
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+        return user;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)

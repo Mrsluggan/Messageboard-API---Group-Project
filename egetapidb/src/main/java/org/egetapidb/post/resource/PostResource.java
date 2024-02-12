@@ -19,6 +19,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -54,10 +55,23 @@ public class PostResource {
 
     @GET
     @Operation(summary = "Visa specifikt inlägg", description = "Hämtar och visar det angivna inlägget")
+    @APIResponse(
+        responseCode = "200",
+        description = "Angivna inlägget visas"
+    )
+    @APIResponse(
+        responseCode = "404",
+        description = "Angivna inlägget hittades inte"
+    )
     @Path("/{id}")
     public Response getPost(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
-        Post post = postService.findPost(id, apiKey);
-        return Response.ok(post).build();
+        try {
+            Post post = postService.findPost(id, apiKey);
+            return Response.ok(post).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+
     }
 
     @GET
