@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
 import org.egetapidb.user.model.User;
 import org.egetapidb.user.service.UserService;
 
@@ -81,6 +82,18 @@ public class UserResource {
 
     @POST
     @Operation(summary = "Skapa användare", description = "Skapar en ny användare och sparar den i databasen.")
+    @APIResponse(
+        responseCode = "201", 
+        description = "Användaren skapades framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "400", 
+        description = "Ogiltig begäran"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
     public Response createUser(@Valid User user, @HeaderParam("API-Key") UUID apiKey) throws URISyntaxException {
 
         user = userService.create(user, apiKey);
@@ -93,6 +106,18 @@ public class UserResource {
     @DELETE
     @Operation(summary = "Ta bort användare", description = "Tar bort angiven användare och raderar den från databasen.")
     @Path("/{id}")
+    @APIResponse(
+        responseCode = "204", 
+        description = "Användaren togs bort framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "404", 
+        description = "Användaren hittades inte"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
     public Response deleteUser(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         userService.deleteUser(id, apiKey);
         return Response.noContent().build();
@@ -101,6 +126,18 @@ public class UserResource {
     @PATCH
     @Operation(summary = "Ändra username på användare", description = "Ändrar till angivet username från user entitet i databasen.")
     @Path("/{userId}")
+    @APIResponse(
+        responseCode = "200", 
+        description = "Användarnamnet ändrades framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "404", 
+        description = "Användaren hittades inte"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
     public Response changeUser(@PathParam("userId") @Min(1) Long userId,
             @RequestBody String newUser,
             @HeaderParam("API-Key") UUID apiKey) {
@@ -112,6 +149,14 @@ public class UserResource {
     @Operation(summary = "Räkna användare", description = "Räknar och visar antalet användare som finns sparade i databasen.")
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
+    @APIResponse(
+        responseCode = "200", 
+        description = "Antalet användare returnerades framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
     public Response countUsers(@HeaderParam("API-Key") UUID apiKey) {
         Long countPosts = userService.countAllUsers(apiKey);
         return Response.ok(countPosts).build();
