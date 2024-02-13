@@ -34,7 +34,7 @@ To test the API and interact with it, use an appropriate client capable of sendi
 
 To create a new developer user and get access to a new API key, go to http://localhost:8080/register.xhtml and register.
 
-To learn more about the API endpoints, go to http://localhost:8080/dev after starting the API. You'll find detailed documentation in Swagger UI.
+To learn more about the API endpoints, go to http://localhost:8080/q/swagger-ui/ after starting the API. You'll find more detailed documentation.
 
 ## Help
 
