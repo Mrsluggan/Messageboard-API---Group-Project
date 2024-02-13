@@ -40,7 +40,7 @@ public class PostService {
         }
 
         Post post = em.find(Post.class, id);
-        
+
         if (post == null) {
             throw new NotFoundException("Inlägget med det angivna id:t hittades inte.");
         }
