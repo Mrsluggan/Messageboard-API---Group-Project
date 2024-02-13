@@ -20,6 +20,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String ImgUrl;
 
     public String getUsername() {
         return username;
@@ -53,5 +54,11 @@ public class User {
         this.email = email;
     }
 
-    
+    public String getImgUrl() {
+        return ImgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        ImgUrl = imgUrl;
+    }
 }
