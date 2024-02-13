@@ -18,8 +18,11 @@ public class User {
     @NotEmpty(message = "Du måste ange ett användarnamn")
     @Column(unique = true)
     private String username;
-    private String password;
+    @NotEmpty(message = "Du måste ange ett lösenord")
+    @Column
+    private String userPassword;
     @Column(unique = true)
+    @NotEmpty(message = "Du måste ange en email")
     private String email;
     private String ImgUrl;
 
@@ -39,14 +42,6 @@ public class User {
         this.id = id;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -62,4 +57,13 @@ public class User {
     public void setImgUrl(String imgUrl) {
         ImgUrl = imgUrl;
     }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+    
 }
