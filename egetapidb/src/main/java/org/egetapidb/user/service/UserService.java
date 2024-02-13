@@ -61,7 +61,13 @@ public class UserService {
             throw new UnauthorizedException("Inte giltligt!");
 
         }
-        em.remove(em.getReference(User.class, id));
+
+        User user = em.find(User.class, id);
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+        em.remove(user);
     }
 
     public Long countAllUsers(UUID apiKey) {
@@ -78,10 +84,12 @@ public class UserService {
         }
             User user = em.find(User.class, userId);
 
-            if (user.getId().equals(userId)) {
+            if (user == null) {
+                throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+            }
+
                 user.setUsername(newUser);
                 em.merge(user);
             }
         }
-}
 }

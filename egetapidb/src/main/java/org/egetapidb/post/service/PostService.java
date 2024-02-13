@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 @Transactional(Transactional.TxType.SUPPORTS)
@@ -52,10 +53,19 @@ public class PostService {
             throw new UnauthorizedException("Inte giltligt!");
         }
 
+        User user = em.find(User.class, userId);
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+
         jakarta.persistence.TypedQuery<Post> query = em.createQuery("SELECT p FROM Post p WHERE p.userId = :userId",
                 Post.class);
         query.setParameter("userId", userId);
-        return query.getResultList();
+
+        List<Post> posts = query.getResultList();
+
+        return posts;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
@@ -64,33 +74,55 @@ public class PostService {
             throw new UnauthorizedException("Inte giltligt!");
         }
         User user = em.find(User.class, userId);
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+
         post.setUserId(user.getId());
         em.persist(post);
         return post;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void deletePost(Long userId, Long id, UUID apiKey) {
+    public void deletePost(Long userId, Long postId, UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
+
         User user = em.find(User.class, userId);
-        if (user.getId().equals(userId)) {
-            em.remove(em.getReference(Post.class, id));
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
         }
 
+        Post post = em.find(Post.class, postId);
+
+        if (post == null || !post.getUserId().equals(userId)) {
+            throw new NotFoundException("Inlägget med det angivna id:t hittades inte för den angivna användaren.");
+        }
+
+        em.remove(post);
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public void changePost(Long userId, Long postId, Post newPost) {
-        Post post = em.find(Post.class, postId);
         User user = em.find(User.class, userId);
-        if (user.getId().equals(userId)) {
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+
+        Post post = em.find(Post.class, postId);
+
+        if (post == null || !post.getUserId().equals(userId)) {
+            throw new NotFoundException("Inlägget med det angivna id:t hittades inte för den angivna användaren.");
+        }
+
             post.setTitle(newPost.getTitle());
             post.setText(newPost.getText());
             em.merge(post);
         }
-    }
 
     public Long countAllPosts(UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
