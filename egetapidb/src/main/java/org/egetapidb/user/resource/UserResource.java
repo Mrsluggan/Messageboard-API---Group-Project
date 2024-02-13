@@ -119,8 +119,13 @@ public class UserResource {
         description = "Internt serverfel"
     )
     public Response deleteUser(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
-        userService.deleteUser(id, apiKey);
-        return Response.noContent().build();
+        try {
+            userService.deleteUser(id, apiKey);
+            return Response.noContent().build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+        
     }
 
     @PATCH
@@ -138,11 +143,14 @@ public class UserResource {
         responseCode = "500", 
         description = "Internt serverfel"
     )
-    public Response changeUser(@PathParam("userId") @Min(1) Long userId,
-            @RequestBody String newUser,
-            @HeaderParam("API-Key") UUID apiKey) {
-        userService.changeUser(userId, newUser, apiKey);
-        return Response.ok().build();
+    public Response changeUser(@PathParam("userId") @Min(1) Long userId,@RequestBody String newUser, @HeaderParam("API-Key") UUID apiKey) {
+        try {
+            userService.changeUser(userId, newUser, apiKey);
+            return Response.ok().build();
+        } catch (NotFoundException e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+        
     }
 
     @GET

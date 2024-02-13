@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -90,8 +91,17 @@ public class PostResource {
         description = "Internt serverfel"
         )
     public Response getPostsByUserId(@PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey) {
-        List<Post> posts = postService.findPostbyUser(userId, apiKey);
-        return Response.ok(posts).build();
+        try {
+            List<Post> posts = postService.findPostbyUser(userId, apiKey);
+
+            if (posts.isEmpty()) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Användaren har inga inlägg.").build();
+            }
+            return Response.ok(posts).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+        
     }
 
     @POST
@@ -112,10 +122,14 @@ public class PostResource {
     public Response createPost(@Valid Post post, @PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey)
             throws URISyntaxException {
 
-        Post createdPost = postService.createPost(post, userId, apiKey);
+        try {
+            Post createdPost = postService.createPost(post, userId, apiKey);
 
-        URI createdUri = new URI(post.getPostId().toString());
-        return Response.created(createdUri).entity(createdPost).build();
+            URI createdUri = new URI(post.getPostId().toString());
+            return Response.created(createdUri).entity(createdPost).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
 
     }
 
@@ -136,8 +150,13 @@ public class PostResource {
     )
     public Response deletePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
-        postService.deletePost(userId, postId, apiKey);
-        return Response.noContent().build();
+        try {
+            postService.deletePost(userId, postId, apiKey);
+            return Response.noContent().build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren eller inlägget hittades inte.").build();
+        }
+        
     }
 
     @PATCH
@@ -158,8 +177,13 @@ public class PostResource {
     public Response changePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
-        postService.changePost(userId, postId, newPost);
-        return Response.ok().build();
+        try {
+            postService.changePost(userId, postId, newPost);
+            return Response.ok().build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+        }
+        
     }
 
     @GET
@@ -183,21 +207,10 @@ public class PostResource {
     @Operation(summary = "Öka likes på inlägg", description = "Tar in postId och uppdaterar den posten likes med 1")
     @Path("{userId}/like/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponse(
-        responseCode = "200",
-        description = "Inlägget gillades framgångsrikt"
-        )
-    @APIResponse(
-        responseCode = "400",
-        description = "Användaren har redan gillat inlägget"
-    )
-    @APIResponse(
-        responseCode = "404",
-        description = "Inlägget hittades inte"
-        )
-    @APIResponse(
-        responseCode = "500",
-        description = "Internt serverfel")
+    @APIResponse(responseCode = "200", description = "Inlägget gillades framgångsrikt")
+    @APIResponse(responseCode = "400", description = "Användaren har redan gillat inlägget")
+    @APIResponse(responseCode = "404", description = "Inlägget hittades inte")
+    @APIResponse(responseCode = "500", description = "Internt serverfel")
     public Response likePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
 
@@ -217,21 +230,10 @@ public class PostResource {
     @Operation(summary = "Öka dislikes på inlägg", description = "Tar in postId och uppdaterar den posten dislikes med 1")
     @Path("{userId}/dislike/{postId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponse(
-        responseCode = "200",
-        description = "Inlägget ogillades framgångsrikt"
-        )
-    @APIResponse(
-        responseCode = "400",
-        description = "Användaren har redan ogillat inlägget"
-        )
-    @APIResponse(
-        responseCode = "404",
-        description = "Inlägget hittades inte"
-        )
-    @APIResponse(
-        responseCode = "500",
-        description = "Internt serverfel")
+    @APIResponse(responseCode = "200", description = "Inlägget ogillades framgångsrikt")
+    @APIResponse(responseCode = "400", description = "Användaren har redan ogillat inlägget")
+    @APIResponse(responseCode = "404", description = "Inlägget hittades inte")
+    @APIResponse(responseCode = "500", description = "Internt serverfel")
     public Response dislikePost(@PathParam("userId") @Min(1) Long userId, @PathParam("postId") @Min(1) Long postId,
             @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
