@@ -16,9 +16,10 @@ public class User {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     @NotEmpty(message = "Du måste ange ett användarnamn")
-    @Column
+    @Column(unique = true)
     private String username;
     private String password;
+    @Column(unique = true)
     private String email;
     private String ImgUrl;
 
