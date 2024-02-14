@@ -38,7 +38,7 @@ public class DeveloperResource {
     }
 
     @GET
-    @Operation(summary = "Visa alla användare", description = "Hämtar och visar alla användare som finns sparade i databasen.")
+    @Operation(summary = "Visa alla developers", description = "Hämtar och visar alla developers som finns sparade i databasen.")
     public Response getDevs() {
 
         List<Developer> devs = developerService.findAll();
