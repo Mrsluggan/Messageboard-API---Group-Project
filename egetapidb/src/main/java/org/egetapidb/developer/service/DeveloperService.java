@@ -24,11 +24,11 @@ public class DeveloperService {
     @Transactional(Transactional.TxType.REQUIRED)
     public Developer createDev(Developer developer) {
 
-        String email = developer.getEmail();
+        String devEmail = developer.getDevEmail();
 
         Developer existingDeveloper = em
-                .createQuery("SELECT d FROM Developer d WHERE d.email = :email", Developer.class)
-                .setParameter("email", email)
+                .createQuery("SELECT d FROM Developer d WHERE d.devEmail = :email", Developer.class)
+                .setParameter("email", devEmail)
                 .getResultStream()
                 .findFirst()
                 .orElse(null);

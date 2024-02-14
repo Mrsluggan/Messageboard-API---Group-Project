@@ -13,23 +13,23 @@ import jakarta.inject.Named;
 @ApplicationScoped
 public class DeveloperBean {
 
-    private String email;
+    private String devEmail;
     private UUID apiKey;
 
     @Inject
     private DeveloperService developerService;
 
-    public String getEmail() {
-        return email;
+    public String getDevEmail() {
+        return devEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDevEmail(String devEmail) {
+        this.devEmail = devEmail;
     }
 
     public void newDeveloper() {
         Developer developer = new Developer();
-        developer.setEmail(email);
+        developer.setDevEmail(devEmail);
         developerService.createDev(developer);
         apiKey = developer.getApiKey();
     }

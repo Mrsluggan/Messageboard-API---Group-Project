@@ -13,7 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 @Transactional(Transactional.TxType.SUPPORTS)
@@ -35,12 +34,12 @@ public class PostService {
         return posts;
     }
 
-    public Post findPost(Long id, UUID apiKey) {
+    public Post findPost(Long postId, UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
 
-        Post post = em.find(Post.class, id);
+        Post post = em.find(Post.class, postId);
 
         if (post == null) {
             throw new NotFoundException("Inlägget med det angivna id:t hittades inte.");
@@ -79,7 +78,7 @@ public class PostService {
             throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
         }
 
-        post.setUserId(user.getId());
+        post.setUserId(user.getUserId());
         em.persist(post);
         return post;
     }
@@ -132,10 +131,17 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateLike(Post post, Long id, Long userId, UUID apiKey) {
+    public Post updateLike(Post post, Long postId, Long userId, UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
+
+        User user = em.find(User.class, userId);
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+
         post.getWhoLiked().add(userId);
         post.increaseLikes();
         em.merge(post);
@@ -144,10 +150,17 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public Post updateDislike(Post post, Long id, Long userId, UUID apiKey) {
+    public Post updateDislike(Post post, Long postId, Long userId, UUID apiKey) {
         if (!developerService.isApiKeyValid(apiKey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
+
+        User user = em.find(User.class, userId);
+
+        if (user == null) {
+            throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+        }
+
         post.getWhoDisliked().add(userId);
         post.increaseDislikes();
         em.merge(post);

@@ -16,16 +16,8 @@ public class Developer {
     private Long devId;
     @Pattern(regexp = "^[^\\s]+$", message = "Ogiltig e-postadress!")
     @Column(unique = true)
-    private String email;
+    private String devEmail;
     private UUID apiKey;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public UUID getApiKey() {
         return apiKey;
@@ -42,4 +34,13 @@ public class Developer {
     public void setDevId(Long devId) {
         this.devId = devId;
     }
+
+    public String getDevEmail() {
+        return devEmail;
+    }
+
+    public void setDevEmail(String devEmail) {
+        this.devEmail = devEmail;
+    }
+    
 }
