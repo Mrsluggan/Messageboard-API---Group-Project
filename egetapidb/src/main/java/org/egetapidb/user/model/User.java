@@ -24,7 +24,7 @@ public class User {
     @Column(unique = true)
     @NotEmpty(message = "Du måste ange en email")
     private String email;
-    private String ImgUrl;
+    private String imgUrl;
 
     public String getUsername() {
         return username;
@@ -50,14 +50,6 @@ public class User {
         this.email = email;
     }
 
-    public String getImgUrl() {
-        return ImgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        ImgUrl = imgUrl;
-    }
-
     public String getUserPassword() {
         return userPassword;
     }
@@ -65,5 +57,12 @@ public class User {
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
-    
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 }
