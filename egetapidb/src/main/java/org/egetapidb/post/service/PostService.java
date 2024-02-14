@@ -26,18 +26,20 @@ public class PostService {
     @Inject
     DeveloperService developerService;
 
-    public List<Post> findAll(UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
+    private void validateApiKey(UUID apikey) {
+        if (!developerService.isApiKeyValid(apikey)) {
             throw new UnauthorizedException("Inte giltligt!");
         }
+    }
+
+    public List<Post> findAll(UUID apiKey) {
+        validateApiKey(apiKey);
         List<Post> posts = em.createQuery("SELECT p FROM Post p", Post.class).getResultList();
         return posts;
     }
 
     public Post findPost(Long postId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
 
         Post post = em.find(Post.class, postId);
 
@@ -48,9 +50,7 @@ public class PostService {
     }
 
     public List<Post> findPostbyUser(Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
 
         User user = em.find(User.class, userId);
 
@@ -69,9 +69,8 @@ public class PostService {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public Post createPost(Post post, Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
@@ -85,9 +84,7 @@ public class PostService {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public void deletePost(Long userId, Long postId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
 
         User user = em.find(User.class, userId);
 
@@ -105,7 +102,9 @@ public class PostService {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void changePost(Long userId, Long postId, Post newPost) {
+    public void changePost(Long userId, Long postId, Post newPost, UUID apiKey) {
+        validateApiKey(apiKey);
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
@@ -118,23 +117,20 @@ public class PostService {
             throw new NotFoundException("Inlägget med det angivna id:t hittades inte för den angivna användaren.");
         }
 
-            post.setTitle(newPost.getTitle());
-            post.setText(newPost.getText());
-            em.merge(post);
-        }
+        post.setTitle(newPost.getTitle());
+        post.setText(newPost.getText());
+        em.merge(post);
+    }
 
     public Long countAllPosts(UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
+
         return em.createQuery("SELECT COUNT(p) FROM Post p", Long.class).getSingleResult();
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public Post updateLike(Post post, Long postId, Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
 
         User user = em.find(User.class, userId);
 
@@ -151,9 +147,7 @@ public class PostService {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public Post updateDislike(Post post, Long postId, Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        validateApiKey(apiKey);
 
         User user = em.find(User.class, userId);
 

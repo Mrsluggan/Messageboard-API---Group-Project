@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -52,9 +53,9 @@ public class PostResource {
     @APIResponse(responseCode = "200", description = "Angivna inlägget visas")
     @APIResponse(responseCode = "404", description = "Angivna inlägget hittades inte")
     @Path("/{id}")
-    public Response getPost(@PathParam("id") @Min(1) Long postId, @HeaderParam("API-Key") UUID apiKey) {
+    public Response getPost(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
         try {
-            Post post = postService.findPost(postId, apiKey);
+            Post post = postService.findPost(id, apiKey);
             return Response.ok(post).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.")
@@ -131,7 +132,7 @@ public class PostResource {
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         try {
-            postService.changePost(userId, postId, newPost);
+            postService.changePost(userId, postId, newPost,apiKey);
             return Response.ok().build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
@@ -163,19 +164,14 @@ public class PostResource {
 
         Post post = postService.findPost(postId, apiKey);
 
-        try {
-            if (post.getWhoLiked().contains(userId)) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Använndare har redan gillat post")
-                        .build();
-            } else {
-                postService.updateLike(post, postId, userId, apiKey);
-                return Response.ok(post).build();
-            }
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+        if (post.getWhoLiked().contains(userId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Använndare har redan gillat post")
+                    .build();
+        } else {
+            postService.updateLike(post, postId, userId, apiKey);
+            return Response.ok(post).build();
         }
-    
     }
 
     @PUT
@@ -190,17 +186,12 @@ public class PostResource {
             @HeaderParam("API-Key") UUID apiKey) {
         Post post = postService.findPost(postId, apiKey);
 
-        try {
-            if (post.getWhoDisliked().contains(userId)) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Använndare har redan ogillat post")
-                        .build();
-            }
-            postService.updateDislike(post, postId, userId, apiKey);
-            return Response.ok(post).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+        if (post.getWhoDisliked().contains(userId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Använndare har redan ogillat post")
+                    .build();
         }
-
+        postService.updateDislike(post, postId, userId, apiKey);
+        return Response.ok(post).build();
     }
 }
