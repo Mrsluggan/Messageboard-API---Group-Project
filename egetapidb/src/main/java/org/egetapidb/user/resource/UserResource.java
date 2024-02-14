@@ -69,10 +69,10 @@ public class UserResource {
         responseCode = "404",
         description = "Angivna användaren hittades inte"
     )
-    @Path("/{id}")
-    public Response getUserById(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
+    @Path("/{userId}")
+    public Response getUserById(@PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey) {
         try {
-            User user = userService.findUser(id, apiKey);
+            User user = userService.findUser(userId, apiKey);
             return Response.ok(user).build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
@@ -98,14 +98,14 @@ public class UserResource {
 
         user = userService.create(user, apiKey);
 
-        URI createdUri = new URI(user.getId().toString());
+        URI createdUri = new URI(user.getUserId().toString());
         return Response.created(createdUri).entity(user).build();
 
     }
 
     @DELETE
     @Operation(summary = "Ta bort användare", description = "Tar bort angiven användare och raderar den från databasen.")
-    @Path("/{id}")
+    @Path("/{userId}")
     @APIResponse(
         responseCode = "204", 
         description = "Användaren togs bort framgångsrikt"
@@ -118,9 +118,9 @@ public class UserResource {
         responseCode = "500", 
         description = "Internt serverfel"
     )
-    public Response deleteUser(@PathParam("id") @Min(1) Long id, @HeaderParam("API-Key") UUID apiKey) {
+    public Response deleteUser(@PathParam("userId") @Min(1) Long userId, @HeaderParam("API-Key") UUID apiKey) {
         try {
-            userService.deleteUser(id, apiKey);
+            userService.deleteUser(userId, apiKey);
             return Response.noContent().build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
@@ -130,7 +130,7 @@ public class UserResource {
 
     @PATCH
     @Operation(summary = "Ändra username på användare", description = "Ändrar till angivet username från user entitet i databasen.")
-    @Path("/{userId}")
+    @Path("/change-username/{userId}")
     @APIResponse(
         responseCode = "200", 
         description = "Användarnamnet ändrades framgångsrikt"
@@ -143,9 +143,59 @@ public class UserResource {
         responseCode = "500", 
         description = "Internt serverfel"
     )
-    public Response changeUser(@PathParam("userId") @Min(1) Long userId,@RequestBody String newUser, @HeaderParam("API-Key") UUID apiKey) {
+    public Response changeUsername(@PathParam("userId") @Min(1) Long userId, @RequestBody String newUser, @HeaderParam("API-Key") UUID apiKey) {
         try {
-            userService.changeUser(userId, newUser, apiKey);
+            userService.changeUsername(userId, newUser, apiKey);
+            return Response.ok().build();
+        } catch (NotFoundException e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+        
+    }
+
+    @PATCH
+    @Operation(summary = "Ändra lösenordet på användare", description = "Ändrar till angivet lösenord från user entitet i databasen.")
+    @Path("/change-password/{userId}")
+    @APIResponse(
+        responseCode = "200", 
+        description = "Lösenordet ändrades framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "404", 
+        description = "Användaren hittades inte"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
+    public Response changeUserPassword(@PathParam("userId") @Min(1) Long userId, @RequestBody String newUser, @HeaderParam("API-Key") UUID apiKey) {
+        try {
+            userService.changeUserPassword(userId, newUser, apiKey);
+            return Response.ok().build();
+        } catch (NotFoundException e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+        }
+        
+    }
+
+    @PATCH
+    @Operation(summary = "Ändra profilbild på användare", description = "Ändrar till angiven profilbild från user entitet i databasen.")
+    @Path("/change-image/{userId}")
+    @APIResponse(
+        responseCode = "200", 
+        description = "Profilbilden ändrades framgångsrikt"
+    )
+    @APIResponse(
+        responseCode = "404", 
+        description = "Användaren hittades inte"
+    )
+    @APIResponse(
+        responseCode = "500", 
+        description = "Internt serverfel"
+    )
+    public Response changeProfileImg(@PathParam("userId") @Min(1) Long userId, @RequestBody String newUser, @HeaderParam("API-Key") UUID apiKey) {
+        try {
+            userService.changeProfileImg(userId, newUser, apiKey);
             return Response.ok().build();
         } catch (NotFoundException e){
             return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();

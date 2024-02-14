@@ -14,7 +14,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
     @NotEmpty(message = "Du måste ange ett användarnamn")
     @Column(unique = true)
     private String username;
@@ -23,8 +23,8 @@ public class User {
     private String userPassword;
     @Column(unique = true)
     @NotEmpty(message = "Du måste ange en email")
-    private String email;
-    private String imgUrl;
+    private String userEmail;
+    private String profileImg;
 
     public String getUsername() {
         return username;
@@ -34,20 +34,12 @@ public class User {
         this.username = username;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUserPassword() {
@@ -58,11 +50,21 @@ public class User {
         this.userPassword = userPassword;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getProfileImg() {
+        return profileImg;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    
 }
