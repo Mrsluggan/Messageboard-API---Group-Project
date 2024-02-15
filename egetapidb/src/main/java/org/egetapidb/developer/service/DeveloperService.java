@@ -65,5 +65,4 @@ public class DeveloperService {
             throw new UnauthorizedException("Inte giltligt!");
         }
     }
-
 }

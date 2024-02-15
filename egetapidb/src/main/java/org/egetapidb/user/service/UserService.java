@@ -3,8 +3,6 @@ package org.egetapidb.user.service;
 import org.egetapidb.developer.service.DeveloperService;
 import org.egetapidb.user.model.User;
 
-import io.quarkus.security.UnauthorizedException;
-
 import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
