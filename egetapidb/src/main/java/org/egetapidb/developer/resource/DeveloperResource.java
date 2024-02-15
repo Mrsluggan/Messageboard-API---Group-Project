@@ -34,7 +34,6 @@ public class DeveloperResource {
 
         URI createdUri = new URI(developer.getDevId().toString());
         return Response.created(createdUri).entity(developer).build();
-
     }
 
     @GET
