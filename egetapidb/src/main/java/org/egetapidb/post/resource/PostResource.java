@@ -131,7 +131,7 @@ public class PostResource {
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         try {
-            postService.changePost(userId, postId, newPost);
+            postService.changePost(userId, postId, newPost,apiKey);
             return Response.ok().build();
         } catch (NotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
