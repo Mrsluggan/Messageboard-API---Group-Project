@@ -7,7 +7,6 @@ import org.egetapidb.developer.service.DeveloperService;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.user.model.User;
 
-import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -25,7 +24,6 @@ public class PostService {
 
     @Inject
     DeveloperService developerService;
-
 
     public List<Post> findAll(UUID apiKey) {
         developerService.validateApiKey(apiKey);
@@ -65,7 +63,7 @@ public class PostService {
     @Transactional(Transactional.TxType.REQUIRED)
     public Post createPost(Post post, Long userId, UUID apiKey) {
         developerService.validateApiKey(apiKey);
-       
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
@@ -99,7 +97,7 @@ public class PostService {
     @Transactional(Transactional.TxType.REQUIRED)
     public void changePost(Long userId, Long postId, Post newPost, UUID apiKey) {
         developerService.validateApiKey(apiKey);
-        
+
         User user = em.find(User.class, userId);
 
         if (user == null) {

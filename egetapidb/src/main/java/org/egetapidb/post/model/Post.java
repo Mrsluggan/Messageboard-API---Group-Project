@@ -35,12 +35,10 @@ public class Post {
 
     public void increaseLikes() {
         this.likes++;
-
     }
 
     public void increaseDislikes() {
         this.dislikes++;
-
     }
 
     public int getLikes() {
@@ -106,5 +104,4 @@ public class Post {
     public void setWhoDisliked(Set<Long> whoDisliked) {
         this.whoDisliked = whoDisliked;
     }
-
 }
