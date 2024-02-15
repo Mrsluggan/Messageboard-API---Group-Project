@@ -59,4 +59,11 @@ public class DeveloperService {
         List<Developer> developers = em.createQuery("SELECT d FROM Developer d", Developer.class).getResultList();
         return developers;
     }
+
+    public void validateApiKey(UUID apiKey) {
+        if (!isApiKeyValid(apiKey)) {
+            throw new UnauthorizedException("Inte giltligt!");
+        }
+    }
+
 }

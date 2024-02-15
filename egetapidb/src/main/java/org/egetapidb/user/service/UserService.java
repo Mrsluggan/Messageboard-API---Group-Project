@@ -26,27 +26,23 @@ public class UserService {
     DeveloperService developerService;
 
     public List<User> findAll(UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        developerService.validateApiKey(apiKey);
+
         List<User> users = em.createQuery("SELECT u FROM User u", User.class).getResultList();
         return users;
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
     public User create(User user, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
+        developerService.validateApiKey(apiKey);
 
-        }
         em.persist(user);
         return user;
     }
 
     public User findUser(Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
-        
+        developerService.validateApiKey(apiKey);
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
@@ -57,10 +53,7 @@ public class UserService {
 
     @Transactional(Transactional.TxType.REQUIRED)
     public void deleteUser(Long userId, UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-
-        }
+        developerService.validateApiKey(apiKey);
 
         User user = em.find(User.class, userId);
 
@@ -71,57 +64,56 @@ public class UserService {
     }
 
     public Long countAllUsers(UUID apiKey) {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+        developerService.validateApiKey(apiKey);
+
         return em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void changeUsername(Long userId, String newUser, UUID apiKey) { {
-        if (!developerService.isApiKeyValid(apiKey)) {
-            throw new UnauthorizedException("Inte giltligt!");
-        }
+    public void changeUsername(Long userId, String newUser, UUID apiKey) {
+        {
+            developerService.validateApiKey(apiKey);
+
             User user = em.find(User.class, userId);
 
             if (user == null) {
                 throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
             }
 
-                user.setUsername(newUser);
-                em.merge(user);
-            }
+            user.setUsername(newUser);
+            em.merge(user);
         }
+    }
 
-        @Transactional(Transactional.TxType.REQUIRED)
-        public void changeUserPassword(Long userId, String newUser, UUID apiKey) { {
-            if (!developerService.isApiKeyValid(apiKey)) {
-                throw new UnauthorizedException("Inte giltligt!");
-            }
-                User user = em.find(User.class, userId);
-    
-                if (user == null) {
-                    throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
-                }
-    
-                    user.setUserPassword(newUser);
-                    em.merge(user);
-                }
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changeUserPassword(Long userId, String newUser, UUID apiKey) {
+        {
+            developerService.validateApiKey(apiKey);
+
+            User user = em.find(User.class, userId);
+
+            if (user == null) {
+                throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
             }
 
-            @Transactional(Transactional.TxType.REQUIRED)
-            public void changeProfileImg(Long userId, String newUser, UUID apiKey) { {
-                if (!developerService.isApiKeyValid(apiKey)) {
-                    throw new UnauthorizedException("Inte giltligt!");
-                }
-                    User user = em.find(User.class, userId);
-        
-                    if (user == null) {
-                        throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
-                    }
-        
-                        user.setProfileImg(newUser);
-                        em.merge(user);
-                    }
-                }
+            user.setUserPassword(newUser);
+            em.merge(user);
+        }
+    }
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    public void changeProfileImg(Long userId, String newUser, UUID apiKey) {
+        {
+            developerService.validateApiKey(apiKey);
+
+            User user = em.find(User.class, userId);
+
+            if (user == null) {
+                throw new NotFoundException("Användaren med det angivna id:t hittades inte.");
+            }
+
+            user.setProfileImg(newUser);
+            em.merge(user);
+        }
+    }
 }
