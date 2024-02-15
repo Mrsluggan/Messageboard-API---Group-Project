@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -15,6 +16,7 @@ public class Developer {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long devId;
     @Pattern(regexp = "^[^\\s]+$", message = "Ogiltig e-postadress!")
+    @NotEmpty (message = "Måste ange email")
     @Column(unique = true)
     private String devEmail;
     private UUID apiKey;
