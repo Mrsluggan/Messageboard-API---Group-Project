@@ -34,6 +34,10 @@ To test the API and interact with it, use an appropriate client capable of sendi
 
 To create a new developer user and get access to a new API key, go to http://localhost:8080/register.xhtml and register.
 
+Once you've obtained your API key, copy and paste it in to the Postman application.
+
+In the Postman application, click on the tab "Headers" and type "API-Key" in the Key section, and in the Value section, paste your newly obtained Api key.
+
 To learn more about the API endpoints, go to http://localhost:8080/q/swagger-ui/ after starting the API. You'll find more detailed documentation.
 
 ## Help
