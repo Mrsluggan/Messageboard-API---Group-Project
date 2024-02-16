@@ -7,7 +7,6 @@ import org.egetapidb.developer.service.DeveloperService;
 import org.egetapidb.post.model.Post;
 import org.egetapidb.user.model.User;
 
-import io.quarkus.security.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
