@@ -7,16 +7,25 @@ Welcome to the message board API, a platform designed to handle both new users a
 ## Getting Started
 
 ### Dependencies
--RESTEasy Classic
--RESTEasy Classic JSON-B
--Hibernate ORM
--Hibernate Validator
--JDBC Driver - PostgreSQL
--Narayana JTA - Transaction manager
--SmallRye OpenAPI
--PrimeFaces
-
 Program: Docker
+
+
+
+-RESTEasy Classic
+
+-RESTEasy Classic JSON-B
+
+-Hibernate ORM
+
+-Hibernate Validator
+
+-JDBC Driver - PostgreSQL
+
+-Narayana JTA - Transaction manager
+
+-SmallRye OpenAPI
+
+-PrimeFaces
 
 ### Installation
 
