@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -28,6 +29,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/api/post")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class PostResource {
 
     @Inject
@@ -78,9 +81,10 @@ public class PostResource {
             }
             return Response.ok(posts).build();
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.")
+                    .build();
         }
-        
+
     }
 
     @POST
@@ -99,7 +103,8 @@ public class PostResource {
             URI createdUri = new URI(post.getPostId().toString());
             return Response.created(createdUri).entity(createdPost).build();
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren med det angivna id:t hittades inte.")
+                    .build();
         }
 
     }
@@ -116,9 +121,10 @@ public class PostResource {
             postService.deletePost(userId, postId, apiKey);
             return Response.noContent().build();
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Användaren eller inlägget hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Användaren eller inlägget hittades inte.")
+                    .build();
         }
-        
+
     }
 
     @PATCH
@@ -131,12 +137,13 @@ public class PostResource {
             @RequestBody Post newPost,
             @HeaderParam("API-Key") UUID apiKey) {
         try {
-            postService.changePost(userId, postId, newPost,apiKey);
+            postService.changePost(userId, postId, newPost, apiKey);
             return Response.ok().build();
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.")
+                    .build();
         }
-        
+
     }
 
     @GET
@@ -173,9 +180,10 @@ public class PostResource {
                 return Response.ok(post).build();
             }
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.")
+                    .build();
         }
-    
+
     }
 
     @PUT
@@ -199,7 +207,8 @@ public class PostResource {
             postService.updateDislike(post, postId, userId, apiKey);
             return Response.ok(post).build();
         } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Inlägget eller användaren hittades inte.")
+                    .build();
         }
 
     }
