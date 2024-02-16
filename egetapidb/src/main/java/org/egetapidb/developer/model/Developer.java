@@ -16,7 +16,7 @@ public class Developer {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long devId;
     @Pattern(regexp = "^[^\\s]+$", message = "Ogiltig e-postadress!")
-    @NotEmpty (message = "Måste ange email")
+    @NotEmpty(message = "Måste ange email")
     @Column(unique = true)
     private String devEmail;
     private UUID apiKey;
@@ -44,5 +44,5 @@ public class Developer {
     public void setDevEmail(String devEmail) {
         this.devEmail = devEmail;
     }
-    
+
 }

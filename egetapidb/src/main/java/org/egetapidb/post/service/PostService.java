@@ -25,7 +25,6 @@ public class PostService {
     @Inject
     DeveloperService developerService;
 
-
     public List<Post> findAll(UUID apiKey) {
         developerService.validateApiKey(apiKey);
         List<Post> posts = em.createQuery("SELECT p FROM Post p", Post.class).getResultList();
@@ -64,7 +63,7 @@ public class PostService {
     @Transactional(Transactional.TxType.REQUIRED)
     public Post createPost(Post post, Long userId, UUID apiKey) {
         developerService.validateApiKey(apiKey);
-       
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
@@ -98,7 +97,7 @@ public class PostService {
     @Transactional(Transactional.TxType.REQUIRED)
     public void changePost(Long userId, Long postId, Post newPost, UUID apiKey) {
         developerService.validateApiKey(apiKey);
-        
+
         User user = em.find(User.class, userId);
 
         if (user == null) {
